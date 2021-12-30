@@ -120,7 +120,8 @@
 <body>
     <div class="container">
         <div class="countdown">
-          <h1 class="countdown-title">Countdown to
+          <h1 class="countdown-title">
+            <span id="nexttitle">Countdown to</span> 
             <span id="year" class="new-year"></span>
           </h1>
           <div class="time-container">
@@ -135,6 +136,7 @@
     <!-- ここからjs   -->
     <script type="text/javascript">
         // 要素を取得
+        const title = document.getElementById('nexttitle')
         const year = document.getElementById('year');
         const days = document.getElementById('days');
         const hours = document.getElementById('hours');
@@ -144,10 +146,11 @@
         // 今年の値を取得
         const currentYear = new Date().getFullYear();
         // 来年の値を取得
-        const nextYear = currentYear + 1;
+        // const nextYear = currentYear + 1;
+        const nextYear = 2022;
         // 来年の1月1日00:00:00のDateオブジェクトを取得
-        const newYearTime = new Date(`January 01 ${nextYear} 00:00:00`);
-
+        // const newYearTime = new Date(`January 01 ${nextYear} 00:00:00`);
+        const newYearTime = new Date(`2021/12/30 17:54:00`);
         // 来年の値をDOMに追加
         year.innerText = nextYear;
 
@@ -162,22 +165,45 @@
 
         // 現在の時間と新年の時間の差を計算する（ミリ秒単位）
         const diff = newYearTime - currentTime;
+        
+        if (diff > 0) {
+            // 現在から新年までの日数を計算
+            const d = Math.floor(diff / 1000 / 60 / 60 / 24);
+            // 時間を計算
+            const h = Math.floor(diff / 1000 / 60 / 60) % 24;
+            // 分を計算
+            const m = Math.floor(diff / 1000 / 60) % 60;
+            // 秒を計算
+            const s = Math.floor(diff / 1000) % 60;
+         
+            // 取得した時間をDOMに追加
+            days.innerText = d;
+            hours.innerText = h < 10 ? '0' + h : h;
+            minutes.innerText = m < 10 ? '0' + m : m;
+            seconds.innerText = s < 10 ? '0' + s : s;
+        } else {
+            //0以下になったらマイナスの値は生成しない
+            // count = {d: 0, h: 0, m: 0, s: 0,};
 
-        // 現在から新年までの日数を計算
-        const d = Math.floor(diff / 1000 / 60 / 60 / 24);
-        // 時間を計算
-        const h = Math.floor(diff / 1000 / 60 / 60) % 24;
-        // 分を計算
-        const m = Math.floor(diff / 1000 / 60) % 60;
-        // 秒を計算
-        const s = Math.floor(diff / 1000) % 60;
+            //カウントダウン終了後に現在時刻を表示する
+            const date = currentTime;
+            const d = date.getDate();
+            const h = date.getHours();
+            const m = date.getMinutes();
+            const s = date.getSeconds();
+            //DOMに追加
+            days.innerText = d;
+            hours.innerText = h < 10 ? '0' + h : h;
+            minutes.innerText = m < 10 ? '0' + m : m;
+            seconds.innerText = s < 10 ? '0' + s : s;
 
-        // 取得した時間をDOMに追加
-        days.innerText = d;
-        hours.innerText = h < 10 ? '0' + h : h;
-        minutes.innerText = m < 10 ? '0' + m : m;
-        seconds.innerText = s < 10 ? '0' + s : s;
+
+            //カウントダウン終了後にタイトルを書き換える
+            nexttitle.innerText = 'Happy New Year';
         }
+        }
+
+        
 
         // ページロード時に関数を実行
         updateCountdown();
